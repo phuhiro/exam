@@ -1,0 +1,28 @@
+﻿<Properties StartupConfiguration="{FA94F14F-32A6-4519-86C0-B0A040270361}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Repository/ExamRepository.cs">
+    <Files>
+      <File FileName="Controllers/TokenController.cs" Line="22" Column="66" />
+      <File FileName="Startup.cs" Line="43" Column="1" />
+      <File FileName="Program.cs" Line="18" Column="1" />
+      <File FileName="Controllers/AuthController.cs" Line="69" Column="52" />
+      <File FileName="Repository/UserRepository.cs" Line="29" Column="39" />
+      <File FileName="Controllers/ValuesController.cs" Line="18" Column="47" />
+      <File FileName="Controllers/ExamController.cs" Line="8" Column="9" />
+      <File FileName="Repository/ExamRepository.cs" Line="19" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.exam PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/macintosh/Projects/exam/exam/Controllers/TokenController.cs" relfile="Controllers/TokenController.cs" line="30" column="1" />
+      <Breakpoint file="/Users/macintosh/Projects/exam/exam/Controllers/TokenController.cs" relfile="Controllers/TokenController.cs" line="32" column="1" />
+      <Breakpoint file="/Users/macintosh/Projects/exam/exam/Controllers/TokenController.cs" relfile="Controllers/TokenController.cs" line="34" column="38" />
+      <Breakpoint file="/Users/macintosh/Projects/exam/exam/Controllers/TokenController.cs" relfile="Controllers/TokenController.cs" line="57" column="1" />
+      <Breakpoint file="/Users/macintosh/Projects/exam/exam/Controllers/TokenController.cs" relfile="Controllers/TokenController.cs" line="55" column="1" />
+      <Breakpoint file="/Users/macintosh/Projects/exam/exam/Controllers/TokenController.cs" relfile="Controllers/TokenController.cs" line="48" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>

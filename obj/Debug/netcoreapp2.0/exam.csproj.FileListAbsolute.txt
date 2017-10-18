@@ -1,0 +1,11 @@
+/Users/macintosh/Projects/exam/exam/obj/Debug/netcoreapp2.0/exam.csprojResolveAssemblyReference.cache
+/Users/macintosh/Projects/exam/exam/obj/Debug/netcoreapp2.0/exam.csproj.CoreCompileInputs.cache
+/Users/macintosh/Projects/exam/exam/obj/Debug/netcoreapp2.0/exam.AssemblyInfoInputs.cache
+/Users/macintosh/Projects/exam/exam/obj/Debug/netcoreapp2.0/exam.AssemblyInfo.cs
+/Users/macintosh/Projects/exam/exam/bin/Debug/netcoreapp2.0/exam.deps.json
+/Users/macintosh/Projects/exam/exam/bin/Debug/netcoreapp2.0/exam.runtimeconfig.json
+/Users/macintosh/Projects/exam/exam/bin/Debug/netcoreapp2.0/exam.runtimeconfig.dev.json
+/Users/macintosh/Projects/exam/exam/bin/Debug/netcoreapp2.0/exam.dll
+/Users/macintosh/Projects/exam/exam/bin/Debug/netcoreapp2.0/exam.pdb
+/Users/macintosh/Projects/exam/exam/obj/Debug/netcoreapp2.0/exam.dll
+/Users/macintosh/Projects/exam/exam/obj/Debug/netcoreapp2.0/exam.pdb
