@@ -17,12 +17,6 @@ namespace exam.Models
         public DbSet<PointExam> point_exams { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Exam>(e => {
-                e.HasKey(x => x.id);
-            });
-            modelBuilder.Entity<User>(e => {
-                e.HasKey(x => x.id);
-            });
         }
     }
 }

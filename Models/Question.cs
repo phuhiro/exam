@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace exam.Models
@@ -17,5 +18,6 @@ namespace exam.Models
         public string answer4 { get; set; }
         public int correct_answer { get; set; }
         public virtual User user { get; set; }
+        public virtual List<ExamQuestion> examquestions { get; set; }
     }
 }

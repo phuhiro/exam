@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exam.Controllers
 {
-
+    [Authorize(Roles = "2")]
     [Route("api/category")]
     public class CategoryController : Controller
     {
@@ -63,7 +63,7 @@ namespace exam.Controllers
             }
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var item = await _category.Get(id);

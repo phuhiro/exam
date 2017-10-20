@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using exam.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,14 +9,16 @@ namespace exam.Repository
 {
     public class Repository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        private readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext _context;
         public Repository(ApplicationDbContext context)
         {
             _context = context;
         }
-        public Task Create(TEntity o)
+        public async Task Create(TEntity o)
         {
-            throw new NotImplementedException();
+            await _context.Set<TEntity>().AddAsync(o);
+            await _context.SaveChangesAsync();
+
         }
 
         public async Task Delete(int id)
@@ -40,12 +43,19 @@ namespace exam.Repository
 
         public async Task Update(int id, TEntity o)
         {
-            var itemToUpdate = await _context.Set<TEntity>().FindAsync(id);
+            var itemToUpdate = await _context.Set<TEntity>().FindAsync(1);
             if (itemToUpdate != null)
             {
                 itemToUpdate = o;
                 await _context.SaveChangesAsync();
             }            
+        }
+
+        public async Task<List<TEntity>> paginate(int perPage,int page)
+        {
+            return await _context.Set<TEntity>().Take(perPage)
+                                 .Skip((page -1) * perPage)
+                                 .ToListAsync();   
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using exam.Models;
 using exam.Repository;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,6 +20,7 @@ namespace exam.Controllers
     {
         private IUserRepository _iUserRepository;
         private string secrectKey = "needtogetthisfromenvironment";
+
         public AuthController(IUserRepository iUserRepository)
         {
             _iUserRepository = iUserRepository;
@@ -29,20 +30,20 @@ namespace exam.Controllers
 
         [HttpPost]
         [Route("sign-up")]
-        public IActionResult SignUp(string username, string email, string name,
+        public async Task<IActionResult> SignUp(string username, string email, string name,
                                      string password, string password_confirm)
         {
             if (!password.Equals(password_confirm))
             {
                 return StatusCode(500, "Password Comfirm does not match! ");
             }
-            var tmp1 = _iUserRepository.FindByEmail(email);
-            var tmp2 = _iUserRepository.FindByUsername(username);
-            if (_iUserRepository.FindByUsername(username) != null
-                || _iUserRepository.FindByEmail(email) != null)
+            var tmp1 = await _iUserRepository.FindByEmail(email);
+            var tmp2 = await _iUserRepository.FindByUsername(username);
+            if (tmp1 != null || tmp2 != null)
             {
                 return StatusCode(500, "Email or username does exist! ");
             }
+
             var user = new User
             {
                 name = name,
@@ -51,15 +52,16 @@ namespace exam.Controllers
                 password = password
             };
 
-            var nUser = _iUserRepository.Create(user);
-            return Ok(new { id = nUser.id, msg = "Successful!" });
+            await _iUserRepository.Create(user);
+            return Ok(new { id = user.id, msg = "Successful!" });
         }
 
         [HttpPost]
         [Route("sign-in")]
-        public IActionResult SignIn(string username, string password)
+        public async Task<IActionResult> SignIn(string username, string password)
         {
-            var user = _iUserRepository.FindByUsername(username);
+            var user = await _iUserRepository.FindByUsername(username);
+
             if (user == null || !user.password.Equals(password))
             {
                 return BadRequest();
@@ -74,9 +76,10 @@ namespace exam.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.Default.GetBytes(this.secrectKey));
             var claims = new Claim[]{
-                new Claim(JwtRegisteredClaimNames.Sub, u.email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.NameId, u.email),
+                new Claim(JwtRegisteredClaimNames.Jti,u.email),
 
+                new Claim(ClaimTypes.Role,u.role+""),
                 new Claim(JwtRegisteredClaimNames.Exp, $"{new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds()}"),
                 new Claim(JwtRegisteredClaimNames.Nbf, $"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}")
             };
@@ -88,6 +91,15 @@ namespace exam.Controllers
             var tokenStr = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenStr;
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult UserInfo()
+        {
+            var dict = new Dictionary<string, string>();
+            var caller = User.Claims.ToList();
+            return Ok();
         }
     }
 }

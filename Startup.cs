@@ -65,6 +65,7 @@ namespace exam
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IExamRepository, ExamRepository>();
 
         }
 

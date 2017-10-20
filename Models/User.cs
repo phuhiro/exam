@@ -17,5 +17,6 @@ namespace exam.Models
         [MaxLength(100)]
         public string username { get; set; }
         public string password { get; set; }
+        public int role { get; set; } = 0;
     }
 }
