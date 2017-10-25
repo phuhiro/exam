@@ -78,7 +78,7 @@ namespace exam
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors("CorsPolicy");
-            //app.UseAuthentication();
+            app.UseAuthentication();
            
             app.UseMvc();
             app.UseSwagger();
