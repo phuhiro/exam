@@ -20,8 +20,8 @@ namespace exam
 {
     public class Startup
     {
-        private string secrectKey = "needtogetthisfromenvironment";  
-        private string connectStr = "Server=localhost;database=exam;uid=root;pwd=minhphu;"
+        private string secrectKey = "needtogetthisfromenvironment";
+        private string connectStr = "Server=localhost;database=exam;uid=root;pwd=minhphu";
         public Startup(IConfiguration configuration)
         {
             
