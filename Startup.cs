@@ -20,7 +20,8 @@ namespace exam
 {
     public class Startup
     {
-        private string secrectKey = "needtogetthisfromenvironment";   
+        private string secrectKey = "needtogetthisfromenvironment";  
+        private string connectStr = "Server=localhost;database=exam;uid=root;pwd=minhphu;"
         public Startup(IConfiguration configuration)
         {
             
@@ -40,22 +41,22 @@ namespace exam
             });            
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                                                        options.UseMySql("Server=localhost;database=exam;uid=root;pwd=minhphu;"));
+                                                        options.UseMySql(connectStr));
 
-            //services.AddAuthentication(o => {
-            //    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
-            //})
-                    //.AddJwtBearer(cfg => {
-                    //    cfg.SaveToken = true;
-                    //    cfg.TokenValidationParameters = new TokenValidationParameters()
-                    //    {
-                    //        ValidateAudience = false,
-                    //        ValidateIssuer = false,
-                    //        ValidateIssuerSigningKey = true,
-                    //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.secrectKey))
-                    //    };
-                    //});
+            services.AddAuthentication(o => {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
+            })
+                    .AddJwtBearer(cfg => {
+                        cfg.SaveToken = true;
+                        cfg.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidateAudience = false,
+                            ValidateIssuer = false,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.secrectKey))
+                        };
+                    });
 
             services.AddSwaggerGen(c =>
             {
