@@ -36,27 +36,27 @@ namespace exam
                 options.AddPolicy("CorsPolicy",
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
+                    .AllowAnyHeader());
+            });            
+
             services.AddDbContext<ApplicationDbContext>(options =>
                                                         options.UseMySql("Server=localhost;database=exam;uid=root;pwd=minhphu;"));
 
-            services.AddAuthentication(o => {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
-            })
-                    .AddJwtBearer(cfg => {
-                        cfg.SaveToken = true;
-                        cfg.TokenValidationParameters = new TokenValidationParameters()
-                        {
-                            ValidateAudience = false,
-                            ValidateIssuer = false,
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.secrectKey))
-                        };
-                    });
-            services.AddMvc();
+            //services.AddAuthentication(o => {
+            //    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
+            //})
+                    //.AddJwtBearer(cfg => {
+                    //    cfg.SaveToken = true;
+                    //    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    //    {
+                    //        ValidateAudience = false,
+                    //        ValidateIssuer = false,
+                    //        ValidateIssuerSigningKey = true,
+                    //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.secrectKey))
+                    //    };
+                    //});
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Exmam API", Version = "v1" });
@@ -66,7 +66,7 @@ namespace exam
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IExamRepository, ExamRepository>();
-
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,9 +77,9 @@ namespace exam
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors("CorsPolicy");
-            app.UseAuthentication();
+            //app.UseAuthentication();
+           
             app.UseMvc();
-
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>

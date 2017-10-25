@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using exam.Models;
 using exam.Repository;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace exam.Controllers
 {
+    
     [Route("api/auth")]
     public class AuthController : Controller
     {

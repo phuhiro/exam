@@ -33,6 +33,13 @@ namespace exam.Controllers
 
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            var user = await _user.Get(id);
+            return Ok(user);
+        }
+
         /// <summary>
         /// Create New user
         /// </summary>

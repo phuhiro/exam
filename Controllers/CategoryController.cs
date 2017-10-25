@@ -22,9 +22,16 @@ namespace exam.Controllers
         [HttpGet("list")]
         public async Task<IActionResult> LCategory()
         {
-            
+
             var categories = await _category.getAll();
             return Ok(categories);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategory(int id)
+        {
+            var category = await _category.Get(id);
+            return Ok(category);
         }
         [HttpPost]
         [Route("create")]

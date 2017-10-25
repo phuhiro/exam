@@ -31,6 +31,14 @@ namespace exam.Controllers
 
             return Ok(questions);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetQuestion(int id)
+        {
+            var question = await _question.Get(id);
+            return Ok(question);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> Create([FromBody] string content,
