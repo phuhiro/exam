@@ -34,10 +34,10 @@ namespace exam
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
+                options.AddPolicy("CorsPolicy",builder => builder.AllowAnyMethod()
+                                  .AllowAnyOrigin()
+                                  .AllowAnyHeader()
+                                 .AllowCredentials());
             });            
 
             services.AddDbContext<ApplicationDbContext>(options =>

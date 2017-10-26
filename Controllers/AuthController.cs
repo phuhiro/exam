@@ -33,7 +33,7 @@ namespace exam.Controllers
         [HttpPost]
         [Route("sign-up")]
         public async Task<IActionResult> SignUp(string username, string email, string name,
-                                     string password, string password_confirm)
+                                     string password = "", string password_confirm = "")
         {
             if (!password.Equals(password_confirm))
             {
