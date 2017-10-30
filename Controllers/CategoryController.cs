@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exam.Controllers
 {
-    [Authorize(Roles = "2")]
+   
     [Route("api/category")]
     public class CategoryController : Controller
     {

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using exam.Models;
 using exam.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -35,6 +34,10 @@ namespace exam.Controllers
         public async Task<IActionResult> SignUp(string username, string email, string name,
                                      string password = "", string password_confirm = "")
         {
+            if(username.Equals("") || email.Equals("") || name.Equals("") || password.Equals(""))
+            {
+                return StatusCode(500,"Please Fill all field");
+            }
             if (!password.Equals(password_confirm))
             {
                 return StatusCode(500, "Password Comfirm does not match! ");
@@ -70,7 +73,7 @@ namespace exam.Controllers
             }
 
             var token = genToken(user);
-            return Ok(new { token = genToken(user) });
+            return Ok(new { token = genToken(user),role = user.role, username = user.username });
         }
 
         private string genToken(User u)
@@ -82,6 +85,7 @@ namespace exam.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti,u.email),
 
                 new Claim(ClaimTypes.Role,u.role+""),
+                new Claim("userid",u.id + ""),
                 new Claim(JwtRegisteredClaimNames.Exp, $"{new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds()}"),
                 new Claim(JwtRegisteredClaimNames.Nbf, $"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}")
             };

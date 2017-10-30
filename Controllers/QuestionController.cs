@@ -41,7 +41,7 @@ namespace exam.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create([FromBody] string content,
+        public async Task<IActionResult> Create(string content,
                                                string answer1, string answer2, string answer3,
                                                 string answer4, int correct_answer)
         {

@@ -32,12 +32,14 @@ namespace exam.Repository
             throw new NotImplementedException();
         }
 
-        public async Task CreateExam(string name, int duration, int[] lQuestionId)
+        public async Task CreateExam(string name, string description,
+                                     int duration, List<Question> questions,
+                                    User u,int cateid)
         {
             var nLExamQuestion = new List<ExamQuestion>();
-            foreach (int qId in lQuestionId)
+            foreach (Question q in questions)
             {
-                var q = await _context.questions.FindAsync(qId);
+               
                 if (q != null)
                 {
                     nLExamQuestion.Add(new ExamQuestion
@@ -49,10 +51,15 @@ namespace exam.Repository
             var ex = new Exam{
                 name = name,
                 duration = duration,
-                examquestions = nLExamQuestion
+                description = description,
+                examquestions = nLExamQuestion,
+                user = u,
+                cateid = cateid
             };
             await _context.exams.AddAsync(ex);
+            await _context.SaveChangesAsync();
         }
+
 
         /// <summary>
         /// Updates the exam.
@@ -62,7 +69,7 @@ namespace exam.Repository
         /// <param name="name">Name.</param>
         /// <param name="duration">Duration.</param>
         /// <param name="lQuestionId">List Question ID.</param>
-        public async Task UpdateExam(int id, string name, int duration, int[] lQuestionId)
+        public async Task UpdateExam(int id, string name, string description , int duration, int[] lQuestionId)
         {
             var exam = await _context.exams
                                      .Include(e => e.examquestions)
@@ -98,15 +105,47 @@ namespace exam.Repository
 
         public async Task<int> Submit(int id,string strListAnswer)
         {
-            int point = 0;
+            int correct = 0;
             var lAnswer = strListAnswer.Split(",");
             var questions = await _context.questions.Where(q => q.examquestions.Any(eq => eq.examId == id))
                                        .ToListAsync();
             for (int i = 0; i < lAnswer.Length; i++)
             {
-                if (Int32.Parse(lAnswer[i]) == questions[i].correct_answer) point++;
+                if (Int32.Parse(lAnswer[i]) == questions[i].correct_answer) correct++;
             }
+            var point = (int)((float)correct / questions.Count() * 100);
             return point;
+        }
+
+        /// <summary>
+        /// Gets the exam by catgory.
+        /// </summary>
+        /// <returns>The exam by catgory.</returns>
+        /// <param name="cateId">Cate identifier.</param>
+        /// <param name="perpage">Perpage.</param>
+        /// <param name="page">Page.</param>
+        public async Task<List<Exam>> getExamByCatgory(int cateId,int perpage = 0, int page = 1)
+        {
+
+            if(perpage == 0 ) {
+                var exams = await _context.exams.Where(e => e.cateid == cateId)
+                                          .Include(e => e.user)
+                                          .Select(e => new Exam{
+                    id = e.id,
+                    name = e.name,
+                    duration = e.duration,
+                    user = new User{username = e.user.username,name = e.user.name }
+                                           })
+                                          .ToListAsync();
+                return exams;
+            } else {
+                var exams = await _context.exams.Where(e => e.cateid == cateId)
+                                          .Include(e => e.user)
+                                          .Take(perpage)
+                                          .Skip((page - 1) * perpage)
+                                          .ToListAsync();
+                return exams;
+            }
         }
     }
 }

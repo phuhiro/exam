@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using exam.Models;
 using exam.Repository;
@@ -14,10 +15,13 @@ namespace exam.Controllers
     {
         private readonly IExamRepository _exam;
         private readonly IQuestionRepository _question;
-        public ExamController(IExamRepository exam,IQuestionRepository question)
+        private readonly IUserRepository _user;
+        public ExamController(IExamRepository exam,IQuestionRepository question,
+                              IUserRepository user)
         {
             _exam = exam;
             _question = question;
+            _user = user;
         }
 
         [Authorize]
@@ -28,21 +32,25 @@ namespace exam.Controllers
             return Ok(exams);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getExam(int id)
+        {
+
+            var exam = await _exam.Get(id);
+            if (exam == null) return NotFound();
+            return Ok(exam);
+        }
         [Authorize(Roles = "1,2")]
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create(string name,int duration, string strQuestions)
+        public async Task<IActionResult> Create(string name,string description
+                                                ,int duration,
+                                                List<Question> questions,
+                                               int cateid = 1)
         {
-            var lQuestion = strQuestions.Split(",");
-            var listId = new int[lQuestion.Length];
-            for (int i = 0; i < lQuestion.Length; i++)
-            {
-                if (!Int32.TryParse(lQuestion[i], out listId[i]))
-                {
-                    return StatusCode(500, "Error");
-                }
-            }
-            await _exam.CreateExam(name, duration, listId);
+            var userid = User.Claims.FirstOrDefault(c => c.Type == "userid").Value;
+            User u = await _user.Get(Int16.Parse(userid));
+            await _exam.CreateExam(name,description, duration, questions,u,cateid);
             return Ok(new
             {
                 msg = "Added!"
@@ -73,7 +81,7 @@ namespace exam.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id,string name,int duration,string strQuestions)
+        public async Task<IActionResult> Update(int id,string name, string description, int duration,string strQuestions)
         {
             var listQuestions = strQuestions.Split(",");
             var listId = new int[listQuestions.Length];
@@ -84,7 +92,7 @@ namespace exam.Controllers
                     return StatusCode(500, "Error");
                 }
             }
-            await _exam.UpdateExam(id, name, duration, listId);
+            await _exam.UpdateExam(id, name, description, duration, listId);
             return Ok(new
             {
                 msg = "Updated!"
