@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exam.Controllers
 {
-    
+
     [Route("api/exam")]
     public class ExamController : Controller
     {
         private readonly IExamRepository _exam;
         private readonly IQuestionRepository _question;
         private readonly IUserRepository _user;
-        public ExamController(IExamRepository exam,IQuestionRepository question,
+        public ExamController(IExamRepository exam, IQuestionRepository question,
                               IUserRepository user)
         {
             _exam = exam;
@@ -24,11 +24,20 @@ namespace exam.Controllers
             _user = user;
         }
 
-        [Authorize]
+        [Authorize(Roles = "1")]
         [HttpGet("list")]
         public async Task<IActionResult> LExam()
-        {   
+        {
             var exams = await _exam.getExam();
+            return Ok(exams);
+        }
+
+        [Authorize]
+        [HttpGet("listbyteacher")]
+        public async Task<IActionResult> LTExam()
+        {
+            var userid = User.Claims.FirstOrDefault(c => c.Type == "userid").Value;
+            var exams = await _exam.getByTeacher(Int16.Parse(userid));
             return Ok(exams);
         }
 
@@ -43,14 +52,14 @@ namespace exam.Controllers
         [Authorize(Roles = "1,2")]
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create(string name,string description
-                                                ,int duration,
+        public async Task<IActionResult> Create(string name, string description
+                                                , int duration,
                                                 List<Question> questions,
                                                int cateid = 1)
         {
             var userid = User.Claims.FirstOrDefault(c => c.Type == "userid").Value;
             User u = await _user.Get(Int16.Parse(userid));
-            await _exam.CreateExam(name,description, duration, questions,u,cateid);
+            await _exam.CreateExam(name, description, duration, questions, u, cateid);
             return Ok(new
             {
                 msg = "Added!"
@@ -66,6 +75,8 @@ namespace exam.Controllers
             return Ok(new
             {
                 name = exam.name,
+                description = exam.description,
+                cateid = exam.cateid,
                 duration = exam.duration,
                 questions = LQuestion
             });
@@ -74,33 +85,29 @@ namespace exam.Controllers
         [Authorize]
         [HttpPost]
         [Route("submit")]
-        public async Task<IActionResult> Submit(int id,string strLAnswer)
+        public async Task<IActionResult> Submit(int id, string strLAnswer)
         {
             var point = await _exam.Submit(id, strLAnswer);
             return Ok(new { point = point });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id,string name, string description, int duration,string strQuestions)
+        public async Task<IActionResult> Update(int id, string name, string description
+                                                , int duration,
+                                                List<Question> questions,
+                                               int cateid = 1)
         {
-            var listQuestions = strQuestions.Split(",");
-            var listId = new int[listQuestions.Length];
-            for (int i = 0; i < listQuestions.Length; i++)
-            {
-                if (!Int32.TryParse(listQuestions[i], out listId[i]))
-                {
-                    return StatusCode(500, "Error");
-                }
-            }
-            await _exam.UpdateExam(id, name, description, duration, listId);
+
+            await _exam.UpdateExam(id, name, description, duration, questions, cateid);
             return Ok(new
             {
-                msg = "Updated!"
+                msg = "Added!"
             });
+
         }
 
         [Authorize]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _exam.Delete(id);

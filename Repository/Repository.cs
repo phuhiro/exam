@@ -43,7 +43,7 @@ namespace exam.Repository
 
         public async Task Update(int id, TEntity o)
         {
-            var itemToUpdate = await _context.Set<TEntity>().FindAsync(1);
+            var itemToUpdate = await _context.Set<TEntity>().FindAsync(id);
             if (itemToUpdate != null)
             {
                 itemToUpdate = o;

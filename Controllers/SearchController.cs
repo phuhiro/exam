@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exam.Controllers
 {
-    [Authorize]
     [Route("api/search")]
     public class SearchController : Controller
     {

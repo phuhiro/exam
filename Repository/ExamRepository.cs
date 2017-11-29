@@ -20,6 +20,7 @@ namespace exam.Repository
         public async Task<List<Exam>> getExam()
         {
             return await _context.exams.Include(e => e.cate)
+                                 .Include(e => e.user)
                                  .ToListAsync();
         }
         /// <summary>
@@ -68,28 +69,44 @@ namespace exam.Repository
         /// <param name="id">Identifier.</param>
         /// <param name="name">Name.</param>
         /// <param name="duration">Duration.</param>
-        /// <param name="lQuestionId">List Question ID.</param>
-        public async Task UpdateExam(int id, string name, string description , int duration, int[] lQuestionId)
+        public async Task UpdateExam(int id, string name, string description ,
+                                     int duration, List<Question> questions,
+                                    int cateid)
         {
             var exam = await _context.exams
                                      .Include(e => e.examquestions)
+                                     .Include(e => e.user)
                                      .FirstAsync(e => e.id == id);
             if(exam != null)
             {
                 exam.name = name.Equals("") ? exam.name : name;
                 exam.duration = duration == 0 ? exam.duration : duration;
                 var nLExamQuestion = new List<ExamQuestion>();
-                foreach(int qId in lQuestionId)
+                foreach (Question q in questions)
                 {
-                    var q = await _context.questions.FindAsync(qId);
-                    if(q != null){
-                        nLExamQuestion.Add(new ExamQuestion{
-                            exam = exam,
-                            question = q
-                        });                     
+
+                    if (q != null)
+                    {
+                        if(q.id == 0){
+                            var tmp = q;
+                            await _context.questions.AddAsync(tmp);
+                            await _context.SaveChangesAsync();
+                            nLExamQuestion.Add(new ExamQuestion{exam = exam,question = tmp});
+                        } else {
+                            var questionTmp = await _context.questions.FindAsync(q.id);
+                            questionTmp.correct_answer = q.correct_answer;
+                            questionTmp.answer1 = q.answer1;
+                            questionTmp.answer2 = q.answer2;
+                            questionTmp.answer3 = q.answer3;
+                            questionTmp.answer4 = q.answer4;
+                            await _context.SaveChangesAsync();
+                            nLExamQuestion.Add(new ExamQuestion{exam = exam,question = questionTmp});
+                        }
+
                     }
                 }
                 exam.examquestions = nLExamQuestion;
+
                 await _context.SaveChangesAsync();
             }
         }
@@ -146,6 +163,14 @@ namespace exam.Repository
                                           .ToListAsync();
                 return exams;
             }
+        }
+
+        public async Task<List<Exam>> getByTeacher(int teacherId)
+        {
+            var u = await _context.users.FindAsync(teacherId);
+            var exams = await _context.exams.Where(e => e.user == u)
+                                      .ToListAsync();
+            return exams;
         }
     }
 }

@@ -2,10 +2,12 @@
 using System.Threading.Tasks;
 using exam.Models;
 using exam.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exam.Controllers
 {
+    [Authorize(Roles = "2")]
     [Route("api/users")]
     public class UserController : Controller
     {
