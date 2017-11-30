@@ -69,11 +69,11 @@ namespace exam.Controllers
             
             var item = await _question.Get(id);
             if (item == null) return NotFound();
-            item.content = !content.Equals("") ? content : item.content;
-            item.answer1 = !answer1.Equals("") ? answer1 : item.answer1;
-            item.answer2 = !answer2.Equals("") ? answer2 : item.answer2;
-            item.answer3 = !answer3.Equals("") ? answer3 : item.answer3;
-            item.answer4 = !answer4.Equals("") ? answer4 : item.answer4;
+            item.content = content != null ? content : item.content;
+            item.answer1 = answer1 != null ? answer1 : item.answer1;
+            item.answer2 = answer2 != null ? answer2 : item.answer2;
+            item.answer3 = answer3 != null ? answer3 : item.answer3;
+            item.answer4 = answer4 != null ? answer4 : item.answer4;
             item.correct_answer = correct_answer != 0 ? correct_answer : item.correct_answer;
             await _question.Update(id, item);
             return Ok(new {
