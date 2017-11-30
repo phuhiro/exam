@@ -24,7 +24,7 @@ namespace exam.Controllers
             _user = user;
         }
 
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "1,2")]
         [HttpGet("list")]
         public async Task<IActionResult> LExam()
         {
