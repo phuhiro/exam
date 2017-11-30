@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace exam.Controllers
 {
-    [Authorize(Roles = "2")]
+    
     [Route("api/category")]
     public class CategoryController : Controller
     {
@@ -18,7 +18,7 @@ namespace exam.Controllers
         {
             _category = category;
         }
-
+        [Authorize(Roles = "1,2")]
         [HttpGet("list")]
         public async Task<IActionResult> LCategory()
         {
@@ -26,13 +26,14 @@ namespace exam.Controllers
             var categories = await _category.getAll();
             return Ok(categories);
         }
-
+        [Authorize(Roles = "1,2")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
             var category = await _category.Get(id);
             return Ok(category);
         }
+        [Authorize(Roles = "2")]
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> Create(string name)
@@ -45,7 +46,7 @@ namespace exam.Controllers
                 id = c.id
             });
         }
-
+        [Authorize(Roles = "2")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, string name)
         {
@@ -69,7 +70,7 @@ namespace exam.Controllers
                 });
             }
         }
-
+        [Authorize(Roles = "2")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
