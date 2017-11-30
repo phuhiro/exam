@@ -28,7 +28,8 @@ namespace exam.Repository
         public async Task<List<User>> Search(string keyword)
         {
             var users = await _context.users.Where(u => u.username.Contains(keyword) ||
-                                             u.email.Contains(keyword))
+                                             u.email.Contains(keyword) ||
+                                                   u.name.Contains(keyword))
                                 .ToListAsync();
             return users;
         }
