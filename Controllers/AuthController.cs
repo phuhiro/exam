@@ -99,13 +99,5 @@ namespace exam.Controllers
             return tokenStr;
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult UserInfo()
-        {
-            var dict = new Dictionary<string, string>();
-            var caller = User.Claims.ToList();
-            return Ok();
-        }
     }
 }
