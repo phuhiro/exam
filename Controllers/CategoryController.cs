@@ -38,13 +38,18 @@ namespace exam.Controllers
         [Route("create")]
         public async Task<IActionResult> Create(string name)
         {
-            var c = new Category { name = name };
-            await _category.Create(c);
-            return Ok(new
-            {
-                msg = "Added!!!",
-                id = c.id
-            });
+            if(!name.Equals("")){
+                var c = new Category { name = name };
+                await _category.Create(c);
+                return Ok(new
+                {
+                    msg = "Added!!!",
+                    id = c.id
+                });                
+            } else{
+                return BadRequest("Name is requried");
+            }
+
         }
         [Authorize(Roles = "2")]
         [HttpPut("{id}")]
